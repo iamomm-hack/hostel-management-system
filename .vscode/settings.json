@@ -1,0 +1,20 @@
+{
+    // Java project layout (no Maven/Gradle - plain source folder)
+    "java.project.sourcePaths": ["src"],
+    "java.project.outputPath": "out",
+    "java.project.referencedLibraries": ["lib/**/*.jar"],
+
+    // JDK used to compile and run the project inside VS Code
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-21",
+            "path": "C:\\Program Files\\BlueJ\\jdk",
+            "default": true
+        }
+    ],
+
+    // Makes "java" and "javac" work in the VS Code terminal
+    "terminal.integrated.env.windows": {
+        "PATH": "C:\\Program Files\\BlueJ\\jdk\\bin;${env:PATH}"
+    }
+}

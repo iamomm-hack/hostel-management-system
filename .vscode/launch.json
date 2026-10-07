@@ -1,0 +1,34 @@
+{
+    // Run from the "Run and Debug" view. Start "1. RMI Server" first, then a client.
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "1. RMI Server",
+            "request": "launch",
+            "mainClass": "hotelmanagement.server.HotelServer",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "java",
+            "name": "2. Swing Client",
+            "request": "launch",
+            "mainClass": "hotelmanagement.client.HotelClient",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "java",
+            "name": "Test: JDBC connection",
+            "request": "launch",
+            "mainClass": "hotelmanagement.database.DBConnectionTest",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "java",
+            "name": "Test: RMI services (server must be running)",
+            "request": "launch",
+            "mainClass": "hotelmanagement.client.RmiTestClient",
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
