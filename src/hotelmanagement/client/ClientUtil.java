@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -94,54 +95,67 @@ public class ClientUtil {
     public static JTable createTable(DefaultTableModel model) {
         JTable table = new JTable(model);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.setRowHeight(24);
-        table.getTableHeader().setReorderingAllowed(false);
+        UITheme.styleTable(table);
         return table;
     }
 
-    /** The bill as plain text lines: Room Charges + Service Charges + GST = Final Amount. */
+    /** The bill formatted with clean visual separators and alignment. */
     public static String formatBill(Bill bill) {
-        String line = "------------------------------------------------\n";
+        String div = "====================================================\n";
+        String line = "----------------------------------------------------\n";
         StringBuilder text = new StringBuilder();
-        text.append("                   HOTEL BILL\n");
+        text.append("\n");
+        text.append("                   INVOICE & BILL DETAILS           \n");
+        text.append("                 Hotel Management System            \n");
+        text.append(div);
+        text.append(String.format("  Booking ID : %-16s Status: %s%n",
+                bill.getBookingId(), bill.isPaid() ? "[PAID]" : "[PENDING]"));
+        text.append(String.format("  Customer   : %s%n", bill.getCustomerName()));
+        text.append(String.format("  Room       : %s (%s)%n", bill.getRoomNumber(), bill.getRoomType()));
+        text.append(String.format("  Stay Period: %s to %s (%d nights)%n",
+                bill.getCheckIn(), bill.getCheckOut(), bill.getNights()));
         text.append(line);
-        text.append("Booking ID : ").append(bill.getBookingId()).append("\n");
-        text.append("Customer   : ").append(bill.getCustomerName()).append("\n");
-        text.append("Room       : ").append(bill.getRoomNumber()).append(" (").append(bill.getRoomType()).append(")\n");
-        text.append("Stay       : ").append(bill.getCheckIn()).append(" to ").append(bill.getCheckOut())
-                .append(" (").append(bill.getNights()).append(" night(s))\n");
+        text.append(String.format("  %-36s %12s%n", "DESCRIPTION", "AMOUNT"));
         text.append(line);
-        text.append(billRow("Room: " + bill.getNights() + " x " + money(bill.getPricePerNight()), bill.getRoomCharges()));
+        text.append(billRow("Room (" + bill.getNights() + " nights @ " + money(bill.getPricePerNight()) + ")", bill.getRoomCharges()));
         for (ServiceUsage usage : bill.getServices()) {
-            text.append(billRow("  " + usage.getServiceName() + " x" + usage.getQuantity(), usage.getAmount()));
+            text.append(billRow(usage.getServiceName() + " (x" + usage.getQuantity() + ")", usage.getAmount()));
         }
-        text.append(billRow("Service Charges", bill.getServiceCharges()));
+        text.append(line);
+        text.append(billRow("Subtotal (Services)", bill.getServiceCharges()));
         text.append(billRow("GST (" + (int) bill.getGstPercent() + "%)", bill.getGstAmount()));
-        text.append(line);
-        text.append(billRow("FINAL AMOUNT", bill.getTotalAmount()));
-        text.append(line);
+        text.append(div);
+        text.append(billRow("TOTAL PAYABLE", bill.getTotalAmount()));
+        text.append(div);
         if (bill.isPaid()) {
-            text.append("Status     : PAID by ").append(bill.getPaymentMethod()).append("\n");
+            text.append(String.format("  Payment Method : %-15s Payment Status: COMPLETED%n", bill.getPaymentMethod()));
         } else {
-            text.append("Status     : NOT PAID YET (bill so far)\n");
+            text.append("  Payment Status : UNPAID (Payment pending at check-out)\n");
         }
+        text.append("\n");
         return text.toString();
     }
 
     private static String billRow(String label, double amount) {
-        return String.format("%-30s %17s%n", label, money(amount));
+        return String.format("  %-36s %12s%n", label, money(amount));
     }
 
-    /** A read-only text area with a fixed-width font, used to display a bill. */
+    /** A read-only text area with a clean monospace font and border. */
     public static JScrollPane billArea(Bill bill) {
         JTextArea area = new JTextArea(formatBill(bill));
         area.setEditable(false);
-        area.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
-        return new JScrollPane(area);
+        area.setFont(new Font("Consolas", Font.PLAIN, 13));
+        area.setBackground(UITheme.BG_APP);
+        area.setForeground(UITheme.TEXT_PRIMARY);
+        area.setCaretPosition(0);
+        area.setBorder(BorderFactory.createEmptyBorder(8, 12, 8, 12));
+        JScrollPane sp = new JScrollPane(area);
+        sp.setBorder(new UITheme.RoundedLineBorder(UITheme.BORDER, 8, 1));
+        return sp;
     }
 
     public static void showBill(Component parent, Bill bill) {
-        JOptionPane.showMessageDialog(parent, billArea(bill), "Bill for booking #" + bill.getBookingId(),
+        JOptionPane.showMessageDialog(parent, billArea(bill), "Invoice - Booking #" + bill.getBookingId(),
                 JOptionPane.PLAIN_MESSAGE);
     }
 }

@@ -12,13 +12,14 @@ import javax.swing.UIManager;
 public class HotelClient {
 
     public static void main(String[] args) {
-        String host = args.length > 0 ? args[0] : "localhost";
+        String host = args.length > 0 ? args[0] : "127.0.0.1";
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
             // the default Swing look is fine too
         }
+        UITheme.init();
 
         try {
             RemoteServices.connect(host);

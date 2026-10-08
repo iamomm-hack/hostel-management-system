@@ -2,7 +2,9 @@
 rem Compiles every .java file under src\ into out\
 setlocal enabledelayedexpansion
 
-rem Use the BlueJ JDK if javac is not already on the PATH
+rem Detect JDK path if javac is not already on PATH
+where javac >nul 2>nul || if exist "C:\Program Files\Java\jdk-21.0.12\bin\javac.exe" set "PATH=C:\Program Files\Java\jdk-21.0.12\bin;%PATH%"
+where javac >nul 2>nul || if exist "C:\Program Files\Java\latest\bin\javac.exe" set "PATH=C:\Program Files\Java\latest\bin;%PATH%"
 where javac >nul 2>nul || set "PATH=C:\Program Files\BlueJ\jdk\bin;%PATH%"
 
 if not exist out mkdir out

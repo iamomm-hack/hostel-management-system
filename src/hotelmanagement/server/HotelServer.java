@@ -19,9 +19,13 @@ public class HotelServer {
     private static Registry registry;
 
     public static void main(String[] args) {
+        if (System.getProperty("java.rmi.server.hostname") == null) {
+            System.setProperty("java.rmi.server.hostname", "127.0.0.1");
+        }
         System.out.println("==============================================");
         System.out.println(" Hotel Management System - RMI Server");
         System.out.println("==============================================");
+        System.out.println("[OK] RMI Server Hostname: " + System.getProperty("java.rmi.server.hostname"));
 
         // Step 0: make sure the database can be reached before accepting clients
         try (Connection con = DBConnection.getConnection()) {
