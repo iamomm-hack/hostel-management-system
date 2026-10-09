@@ -8,13 +8,16 @@
     "java.configuration.runtimes": [
         {
             "name": "JavaSE-21",
-            "path": "C:\\Program Files\\BlueJ\\jdk",
+            "path": "C:\\Program Files\\Java\\jdk-21.0.12",
             "default": true
         }
     ],
 
+    // Ignore classpath warning for standalone files or files outside src
+    "java.errors.incompleteClasspath.severity": "ignore",
+
     // Makes "java" and "javac" work in the VS Code terminal
     "terminal.integrated.env.windows": {
-        "PATH": "C:\\Program Files\\BlueJ\\jdk\\bin;${env:PATH}"
+        "PATH": "C:\\Program Files\\Java\\jdk-21.0.12\\bin;${env:PATH}"
     }
 }
