@@ -1,13 +1,3 @@
--- ============================================================
---  Distributed Hotel Management System using Java RMI and JDBC
---  Database script: creates the database, tables and demo data
---
---  WARNING: this script DROPS and re-creates hotel_management,
---  so running it again resets everything to the demo data.
---
---  Run as root:   mysql -u root -p < database/hotel_management.sql
--- ============================================================
-
 DROP DATABASE IF EXISTS hotel_management;
 CREATE DATABASE hotel_management CHARACTER SET utf8mb4;
 USE hotel_management;
